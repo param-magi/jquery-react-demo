@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Display DATA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script>
+           $(document).ready(function() {     
+              $(document).on('click', '.btn1', function() {
+               var currentId = $(this).attr("id");
+                var data = {
+                  idtoDelete: currentId
+                };
+                var answer = confirm ("Are you sure you want to delete the record ?");
+                    if (answer){
+                       $.ajax({
+                          type: 'POST',
+                          url: 'process.php',
+                          data: data,
+                        });
+                           $(this).closest('tr').find('td').fadeOut(300,function(){ 
+                                $(this).parents('tr:first').remove();  
+                            });
+                    }
+              });
+          });
+    </script>
+  </head>
+      <body>
+      <div id="Table-data"></div>
+      <div id="Form-data"></div>
+          <script type="text/jsx">
+              var DataInTableFormat = React.createClass({
+                    getInitialState: function() {
+                        return {
+                          phpData : ''
+                        }
+                    },
+                    componentDidMount: function() {
+                        $.get(this.props.source, function(result) { //storing the JSON data in result
+                          var collection = JSON.parse(result);  //coverting JSON data to Javascript object
+                          
+                          if (this.isMounted()) {
+                            this.setState({
+                              phpData: collection
+                           });
+                          }
+                        }.bind(this));
+                        
+                    },
+                   render:function()
+                    {
+                      DBdata = this.state.phpData || [];
+                        return (
+                            <div>
+                             <table id="myTable">
+                                  <th>ID</th>
+                                  <th>Name</th>
+                                  <th>Email</th>
+                                  <th>Phone</th>
+                                  <th>Marks</th>
+                                  <th>Edit</th>
+                                  <th>Delete</th>
+                                     {DBdata.map(function(d){
+                                     return(
+                                      <tr>
+                                      <td id={d.id}>{d.id}</td>
+                                      <td>{d.name}</td>
+                                      <td>{d.email}</td>
+                                      <td>{d.phone}</td>
+                                      <td>{d.marks}</td>
+                                      <td className="update_record"><a href={"http://localhost/React-Demo/update_record.html?id=" + d.id}><img className="edit" src="http://localhost/React-Demo/images/edit_logo1.png"/></a></td>
+                                      <td className="delete_record"><input type="image" src="http://localhost/React-Demo/images/delete-button.png" className="btn1" id={d.id} /> </td>
+                                      </tr>
+                                      )}
+                              )}
+                           </table>
+                           <a href="http://localhost/React-Demo/add_record.html"><button name="add_new" value="Add New" id="add_new" >Add New</button></a>
+                           </div>
+                    )}
+              });
+              React.render(
+                <DataInTableFormat source="http://localhost/React-Demo/index.php" />,
+                  document.getElementById('Table-data')
+                );
+        </script>
+     </body>
+</html>
