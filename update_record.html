@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>update new record</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="css/up_style.css">
+  </head>
+      <body>
+    <div id="Table-data"></div>
+      <div id="updt_msg">
+        <h4></h4>
+      </div>
+          <script type="text/jsx">
+            var BasicInputBox = React.createClass ({
+                render: function (){
+                  return (
+                   <div>
+                    <tr><td>
+                      <label>{this.props.label}</label></td>
+                       <td><input type="text" onChange = {this.props.valChange} value = {this.props.value}/></td>
+                    </tr>
+                   </div>
+                  );
+                }
+            });
+            var DataInTableFormat = React.createClass({
+                getInitialState: function() {
+                  return {
+                    phone:''
+
+                  }
+                },
+                componentDidMount: function() {
+                  var url = document.URL;  
+                  var currentId = url.substring(url.lastIndexOf('?') + 4);
+                  var data = {
+                  idtoUpdate: currentId
+                  };
+                
+                  $.ajax({
+                          type: 'POST',
+                          url: 'fetch_data.php',
+                          data: data,
+                          success: function(response) {
+                            var result = JSON.parse(response);
+                            $("#sid").val(result[0].id);
+                            $("#sname").val(result[0].name);
+                            $("#semail").val(result[0].email);
+                            $("#sphone").val(result[0].phone);
+                            $("#smarks").val(result[0].marks);
+                          }
+                        });
+                },
+                submit: function (e){
+                  e.preventDefault()
+
+                  
+                  var data = {
+                    id: $("#sid").val(),
+                    name: $("#sname").val(),
+                    email: $("#semail").val(),
+                    phone: $("#sphone").val(),
+                    marks:  $("#smarks").val()
+                  };
+                  $.ajax({
+                    type: 'POST',
+                    url: 'update.php',
+                    data: data
+                  })
+                  .done(function(data) {
+                   window.location="http://localhost/React-Demo/index.html";
+                  })
+                  .fail(function(jqXhr) {
+                    console.log('failed to register');
+                  });
+
+                },
+                render:function()
+                {
+                  return (
+                        <div>
+                              <form id="resposeData" name="resData" onSubmit={this.submit} >
+                                  <table id="myData" >
+                                  <tr><td>Student ID :</td><td><input type="text" name="id" id="sid" readOnly={true}/></td></tr>
+                                  <tr><td>Student Name :</td><td><input type="text"  name="name" id="sname" /></td></tr>
+                                  <tr><td>Student Email :</td><td><input type="text" name="email" id="semail"/></td></tr>
+                                  <tr><td>Student Phone: </td><td><input type="text"  name="phone" id="sphone"/></td></tr>
+                                  <tr><td>Student Marks: </td><td><input type="text" name="marks" id="smarks"/></td></tr>
+                                  <tr><td></td><td><button className="update" name="submit" value="submit" id="sub" onClick="submitForm()">Update</button></td></tr>
+                                  </table>
+                                </form>
+                        
+                        </div>
+                )}
+           });
+            React.render(
+                    <DataInTableFormat />,
+                      document.getElementById('Table-data')
+                    );
+
+        </script>
+     </body>
+</html>
