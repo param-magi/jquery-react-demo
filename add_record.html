@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Add Record</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+<body>
+  <div id="form-data"></div>
+  <script type="text/jsx">
+ var BasicInputBox = React.createClass ({
+  render: function (){
+    return (
+     <div>
+       <label>{this.props.label}</label>
+       <br/>
+       <input type="text" onChange={this.props.valChange} value= {this.props.val} />
+       <br/> 
+     </div>
+    );
+  }
+ });
+
+ var Contact = React.createClass({
+    getInitialState: function(){
+      return {}
+    },
+    
+    submit: function (e){
+      e.preventDefault()
+      console.log(this.state);
+      var data = {
+        name: this.state.name,
+        email: this.state.email,
+        phone_no:this.state.phone_no,
+        marks: this.state.marks
+      };
+      $.ajax({
+        type: 'POST',
+        url: 'process.php',
+        data: data
+      })
+      .done(function(data) {
+        window.location="http://localhost/React-Demo/index.html";
+      })
+      .fail(function(jqXhr) {
+        console.log('failed to register');
+      });
+     },
+    nameChange: function(e){
+      this.setState({name: e.target.value})
+    },
+    emailChange: function(e){
+     this.setState({email: e.target.value})
+    },
+    phoneChange: function(e){
+     this.setState({phone_no: e.target.value})
+    },
+    markChange: function(e){
+     this.setState({marks: e.target.value})
+    },
+
+    render: function(){
+       return (
+        <form onSubmit={this.submit} >
+          <BasicInputBox label="Name:" valChange={this.nameChange} val={this.state.name}/>
+          <BasicInputBox label="Email:" valChange={this.emailChange} val={this.state.email}/>
+          <BasicInputBox label="Phone No.:" valChange={this.phoneChange} val={this.state.phone_no}/>
+          <BasicInputBox label="Marks.:" valChange={this.markChange} val={this.state.marks}/>
+          <button type="submit">Submit</button>
+        </form>
+      );
+    }
+});
+
+React.render(<Contact/>, document.body);
+</script>
+</body>
+</html>
