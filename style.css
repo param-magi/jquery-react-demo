@@ -1,0 +1,49 @@
+.delete_record a{
+	color: Red !important;
+	text-decoration: none;
+}
+.update_record a{
+	color: #0088FF;
+	text-decoration: none;
+}
+button {
+    background: #FAA700;
+    color: #fff;
+    font-size: 12px;
+    height: 34px;
+    width: 98px;
+    margin-top: 10px;
+}
+
+table {
+    font-family: verdana;
+    font-size: 13px;
+    text-align: center;
+    width: 60%;
+}
+
+td, tr, table, th {
+    border: 1px solid;
+    border-collapse: collapse;
+    padding: 6px;
+    background: #dad6c3 none repeat scroll 0 0;
+}
+
+body {
+    font-family: verdana;
+    font-size: 13px;
+}
+
+form {
+    margin: 0 auto;
+    padding: 2%;
+    width: 30%;
+    background: #dad6c3 none repeat scroll 0 0;
+}
+input {
+    height: 18px;
+    width: 56%;
+}
+.btn1 {
+    width: 22%;
+}
