@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Initial Data Via AJAX</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+      <body>
+      <div id="Table-data"></div>
+      <div id="Form-data"></div>
+          <script type="text/jsx">
+              var DataInTableFormat = React.createClass({
+                    getInitialState: function() {
+                        return {
+                          phpData: []
+                        };
+                    },
+                    componentDidMount: function() {
+                        $.get(this.props.source, function(result) { //storing the JSON data in result
+                          var collection = JSON.parse(result);  //coverting JSON data to Javascript object
+                          if (this.isMounted()) {
+                            this.setState({
+                              phpData: collection
+                           });
+                          }
+                        }.bind(this));
+                    },
+                   render:function()
+                    {
+                      DBdata = this.state.phpData || [];
+                        return (
+                            <div>
+                           
+                              <table>
+                                
+                                <th>Name</th>
+                                  <th>Email</th>
+                                
+                                {DBdata.map(function(d){
+                                     return(
+                                      <tr>
+                                      <td>{d.name}</td>
+                                      <td>{d.email}</td>
+                                      </tr>
+
+                                      )}
+
+                              )}
+                              <tr>
+                                
+                                <td><a href="add_record.html"><input type="submit" name="Submit" value="Add"/></a> </td>
+                              </tr>
+                            </table>
+                          
+                           </div>
+
+                    )}
+
+              });
+              React.render(
+                <DataInTableFormat source="http://localhost/PHP-React-Demo/add_record.html" />,
+                  document.getElementById('Table-data')
+                );
+               
+
+          </script>
+
+      </body>
+</html>
